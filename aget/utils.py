@@ -12,8 +12,6 @@ from .common import (
     OneM,
     OneG,
     OneT,
-    OneP,
-    OneE,
     DEFAULT_CHUCK_SIZE
 )
 
@@ -69,6 +67,7 @@ def terminal_width():
 
 def assert_completed_file(args):
     path = args.out
-    if os.path.exists(path):
+    info_path = args.out + '.aget'
+    if os.path.exists(path) and not os.path.exists(info_path):
         print(color_str(path, codes=(1, 91)), 'is existed')
         sys.exit()

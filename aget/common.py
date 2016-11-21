@@ -18,8 +18,6 @@ OneK = 1024
 OneM = OneK * OneK
 OneG = OneM * OneK
 OneT = OneG * OneK
-OneP = OneT * OneK
-OneE = OneP * OneK
 
 DEFAULT_CHUCK_SIZE = 1 * OneM
 DEFAULT_CONCURRENCY = 10

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import asyncio
 import mugen
 
 from .common import OK_STATUSES

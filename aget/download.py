@@ -19,7 +19,7 @@ async def download(args):
                    # chuck_size=DEFAULT_CHUCK_SIZE,
                    # concurrency=DEFAULT_CONCURRENCY):
 
-    file_obj = File(args.out + '.tmp')
+    file_obj = File(args.out)
 
     method = args.method
     url = args.url
@@ -86,7 +86,6 @@ async def download(args):
     exit_session()
     shower.over()
     show_task.cancel()
-    os.rename(args.out + '.tmp', args.out)
 
 
 def save_data(file_obj, begin_point, end_point, shower, part, fut):

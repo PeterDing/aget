@@ -115,12 +115,10 @@ class Info(object):
 
 
     def merge_chucks(self, chucks):
-        print('chucks', chucks)
         if len(chucks) % 2 != 0:
             chucks = chucks[:-1]
         internals = [chucks[i:i+2] for i in range(0, len(chucks), 2)]
         internals.sort()
-        print('internals', len(internals), internals)
 
         downloaded_chucks = []
         downloaded_chucks.append(internals[0])
@@ -146,8 +144,6 @@ class Info(object):
 
             downloaded_chucks.append([n_begin_point, n_end_point])
 
-        print('downloaded_chucks', downloaded_chucks)
-
         return downloaded_chucks
 
 
@@ -169,7 +165,6 @@ class Info(object):
                 continue
             else:
                 undownload_chucks.append((chuck1[1] + 1, chuck2[0] - 1))
-        print('undownload_chucks', undownload_chucks)
         return undownload_chucks
 
 
@@ -218,7 +213,9 @@ class Shower(object):
 
     async def show(self):
         total_size = sizeof_fmt(self.content_length)
-        header = self.TEMPLATE.format(self.filename, total_size, self.content_length)
+        header = self.TEMPLATE.format(self.filename,
+                                      total_size,
+                                      self.content_length)
         print(header)
 
         while True:
@@ -227,13 +224,13 @@ class Shower(object):
 
             width = terminal_width()
             cs = sizeof_fmt(self.completed_size)
-            pre_width = len('\r{}/{} []'.format(cs, total_size))
+            pre_width = len('{}/{} []'.format(cs, total_size))
             status = '{}/{}'.format(color_str(cs, codes=(1, 91)),
                                     color_str(total_size, codes=(1, 92)))
             process_line_width = width - pre_width
             p = self.completed_size / self.content_length
             process_line = '>' * int(p * process_line_width) \
-                + ' ' * int(process_line_width - p * process_line_width)
+                           + ' ' * (process_line_width - int(p * process_line_width))
 
             status_line = '\r{} [{}]'.format(status, process_line)
             sys.stdout.write(status_line)
