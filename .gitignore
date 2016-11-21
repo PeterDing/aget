@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Working Directory
+working/
+
+# DB Dumps
+dump*.out
+
+# other
+.ropeproject/

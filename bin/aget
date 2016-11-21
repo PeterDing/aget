@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+
+import aget
+
+if __name__ == '__main__':
+    aget.main()

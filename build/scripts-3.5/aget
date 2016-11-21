@@ -1,0 +1,6 @@
+#!/Users/peter/dev/virtual_env/pyv3/bin/python3
+
+import aget
+
+if __name__ == '__main__':
+    aget.main()

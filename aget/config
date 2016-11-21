@@ -1,0 +1,8 @@
+[basic]
+concurrency = 10
+chuck_size = 1M
+quiet = false
+
+[http]
+user-agent = aget
+
