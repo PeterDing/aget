@@ -9,10 +9,10 @@ except ImportError:
     # We won't be able to build the Wheel file on Windows.
     from distutils.core import setup
 
-if sys.version_info < (3, 4, 0):
-    raise RuntimeError("aget requires Python 3.4.0+")
+if sys.version_info < (3, 5, 0):
+    raise RuntimeError("aget requires Python 3.5.0+")
 
-version = "0.1.2"
+version = "0.1.4"
 
 requires = ["mugen"]
 
@@ -32,11 +32,12 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
     ],
 
     packages=["aget"],
 
-    scripts=['bin/aget']
+    scripts=['bin/aget'],
+
+    include_package_data=True
 )
