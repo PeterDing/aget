@@ -12,7 +12,7 @@ except ImportError:
 if sys.version_info < (3, 5, 0):
     raise RuntimeError("aget requires Python 3.5.0+")
 
-version = "0.1.4"
+version = "0.1.6"
 
 requires = ["mugen"]
 
