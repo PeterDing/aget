@@ -3,6 +3,7 @@
 import os
 import sys
 import asyncio
+import time
 
 from .color import color_str
 
@@ -190,6 +191,7 @@ class Shower(object):
         self.filename = filename
         self.content_length = content_length
         self._completed_size = completed_size
+        self._pre_size = completed_size
         self._stop = False
         self._completed_chucks = []
 
@@ -218,24 +220,37 @@ class Shower(object):
                                       self.content_length)
         print(header)
 
+        begin_time = time.time()
         while True:
             if self.stop:
                 break
 
+            end_time = time.time()
+
+            completed_size = self.completed_size
+            download_size = completed_size - self._pre_size
+            self._pre_size = completed_size
+
+            speed = download_size // (end_time - begin_time)
+            speed_str = '{}/s'.format(sizeof_fmt(speed))
+
             width = terminal_width()
-            cs = sizeof_fmt(self.completed_size)
-            pre_width = len('{}/{} []'.format(cs, total_size))
-            status = '{}/{}'.format(color_str(cs, codes=(1, 91)),
-                                    color_str(total_size, codes=(1, 92)))
+            cs = sizeof_fmt(completed_size)
+            pre_width = len('{}/{} {} []'.format(cs, total_size, speed_str))
+            status = '{}/{} {}'.format(
+                color_str(cs, codes=(1, 91)),
+                color_str(total_size, codes=(1, 92)),
+                color_str(speed_str, codes=(1,94)))
             process_line_width = width - pre_width
-            p = self.completed_size / self.content_length
+            p = completed_size / self.content_length
             process_line = '>' * int(p * process_line_width) \
-                           + ' ' * (process_line_width - int(p * process_line_width))
+                            + ' ' * (process_line_width - int(p * process_line_width))
 
             status_line = '\r{} [{}]'.format(status, process_line)
             sys.stdout.write(status_line)
             sys.stdout.flush()
 
+            begin_time = end_time
             await asyncio.sleep(2)
 
 
