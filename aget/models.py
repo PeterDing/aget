@@ -232,7 +232,7 @@ class Shower(object):
             self._pre_size = completed_size
 
             speed = download_size // (end_time - begin_time)
-            speed_str = '{}/s'.format(sizeof_fmt(speed))
+            speed_str = '{: >7}/s'.format(sizeof_fmt(speed))
 
             width = terminal_width()
             cs = sizeof_fmt(completed_size)
