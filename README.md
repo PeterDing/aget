@@ -30,7 +30,7 @@ aget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz -s 10
 aget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz -k 1M
 ```
 
-### Arguments
+### Options
 
 ```shell
 -o OUT, --out OUT             # output path
