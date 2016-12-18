@@ -118,33 +118,10 @@ class Info(object):
     def merge_chucks(self, chucks):
         if len(chucks) % 2 != 0:
             chucks = chucks[:-1]
-        internals = [chucks[i:i+2] for i in range(0, len(chucks), 2)]
-        internals.sort()
 
-        downloaded_chucks = []
-        downloaded_chucks.append(internals[0])
-        for begin_point, end_point in internals[1:]:
-            pre_begin_point, pre_end_point = downloaded_chucks[-1]
+        intervals = [chucks[i:i+2] for i in range(0, len(chucks), 2)]
 
-            # case 1
-            # ----------
-            #                -----------
-            if pre_end_point + 1 < begin_point:
-                n_begin_point = begin_point
-                n_end_point = end_point
-
-            # case 2
-            # -----------------
-            #                  ----------
-            #             --------
-            #     ------
-            else:
-                n_begin_point = pre_begin_point
-                n_end_point = max(pre_end_point, end_point)
-                downloaded_chucks.pop()
-
-            downloaded_chucks.append([n_begin_point, n_end_point])
-
+        downloaded_chucks = _merge_intervals(intervals)
         return downloaded_chucks
 
 
@@ -159,18 +136,60 @@ class Info(object):
                 return []
 
         chucks = [[0, 0]] + list(self.downloaded_chucks) + [[N, N]]
-        undownload_chucks = []
-        for i, chuck1 in enumerate(chucks[:-1]):
-            chuck2 = chucks[i+1]
-            if chuck1[1] == chuck2[0]:
-                continue
-            else:
-                undownload_chucks.append((chuck1[1] + 1, chuck2[0] - 1))
+        undownload_chucks = _find_gaps(chucks)
+
         return undownload_chucks
 
 
     def remove_aget(self):
         os.remove(self.info_filename)
+
+
+def _merge_intervals(intervals):
+    intervals.sort()
+
+    mt = []
+
+    mt.append(intervals[0])
+    for begin_point, end_point in intervals[1:]:
+        pre_begin_point, pre_end_point = mt[-1]
+
+        # case 1
+        # ----------
+        #                -----------
+        if pre_end_point + 1 < begin_point:
+            n_begin_point = begin_point
+            n_end_point = end_point
+
+        # case 2
+        # -----------------
+        #                  ----------
+        #             --------
+        #     ------
+        else:
+            n_begin_point = pre_begin_point
+            n_end_point = max(pre_end_point, end_point)
+            mt.pop()
+
+        mt.append([n_begin_point, n_end_point])
+
+    return mt
+
+
+def _find_gaps(intervals):
+    if len(intervals) <= 1:
+        return []
+
+    gaps = []
+
+    for i, interval in enumerate(intervals[:-1]):
+        next_interval = intervals[i+1]
+        if interval[1] + 1 < next_interval[0]:
+            gaps.append([interval[1] + 1, next_interval[0] - 1])
+        else:
+            continue
+
+    return gaps
 
 
 class Shower(object):
@@ -236,7 +255,7 @@ class Shower(object):
 
             width = terminal_width()
             cs = sizeof_fmt(completed_size)
-            pre_width = len('{}/{} {} []'.format(cs, total_size, speed_str))
+            pre_width = len('{}/{} {} [] '.format(cs, total_size, speed_str))
             status = '{}/{} {}'.format(
                 color_str(cs, codes=(1, 91)),
                 color_str(total_size, codes=(1, 92)),
@@ -246,7 +265,7 @@ class Shower(object):
             process_line = '>' * int(p * process_line_width) \
                             + ' ' * (process_line_width - int(p * process_line_width))
 
-            status_line = '\r{} [{}]'.format(status, process_line)
+            status_line = '\r{} [{}] '.format(status, process_line)
             sys.stdout.write(status_line)
             sys.stdout.flush()
 
