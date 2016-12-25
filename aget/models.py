@@ -13,18 +13,20 @@ from .utils import data_pack, data_unpack, sizeof_fmt, terminal_width
 class File(object):
 
     def __init__(self, path):
-        if os.path.exists(path):
-            fd = open(path, 'rb+')
-        else:
-            fd = self.create_file(path)
-
-        self._fd = fd
+        self._fd = None
+        self._path = path
         self.info = Info(path)
 
 
     @property
     def fd(self):
         return self._fd
+
+
+    @property
+    def path(self):
+        return self._path
+
 
     @property
     def undownload_chucks(self):
@@ -35,13 +37,19 @@ class File(object):
         return self.info.content_length == 0
 
 
-    def create_file(self, path):
-        _dir = os.path.dirname(path)
-        if _dir and not os.path.exists(_dir):
-            os.makedirs(_dir)
-
-        fd = open(path, 'wb+')
-        return fd
+    def create_file(self):
+        path = self.path
+        if os.path.exists(path):
+            fd = open(path, 'rb+')
+            self._fd = fd
+            return fd
+        else:
+            _dir = os.path.dirname(path)
+            if _dir and not os.path.exists(_dir):
+                os.makedirs(_dir)
+            fd = open(path, 'wb+')
+            self._fd = fd
+            return fd
 
 
     def write(self, data, seek):
@@ -126,13 +134,13 @@ class Info(object):
 
 
     def find_undownload_chucks(self):
-        N = self.content_length - 1
+        N = self.content_length
         if not self.downloaded_chucks:
-            return [[0, N]]
+            return [[0, N-1]]
         else:
             if len(self.downloaded_chucks) == 1 \
                     and self.downloaded_chucks[0][0] == 0 \
-                    and self.downloaded_chucks[0][-1] == N:
+                    and self.downloaded_chucks[0][-1] == N-1:
                 return []
 
         chucks = [[0, 0]] + list(self.downloaded_chucks) + [[N, N]]

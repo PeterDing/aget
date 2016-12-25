@@ -44,6 +44,7 @@ async def download(args):
             return None
 
     file_obj.info.content_length = content_length
+    file_obj.create_file()
 
     shower = Shower(args.out,
                     content_length,
@@ -58,23 +59,30 @@ async def download(args):
     part = 1
     # print(list(file_obj.undownload_chucks))
     for begin_point, end_point in file_obj.undownload_chucks:
-        point = -1
-        while begin_point != point:
+        point = begin_point
+        point_t = 0
+        while point <= end_point:
             await ctrl_queue.put(None)
-            point = min(begin_point + chuck_size, end_point)
+            point_t = min(point + chuck_size, end_point)
 
-            task = asyncio.ensure_future(request_range(method, url,
-                                                       begin_point, point,
-                                                       ctrl_queue,
-                                                       headers=headers,
-                                                       data=data,
-                                                       timeout=timeout))
+            task = asyncio.ensure_future(
+                request_range(method, url,
+                              point,
+                              point_t,
+                              ctrl_queue,
+                              headers=headers,
+                              data=data,
+                              timeout=timeout))
+
             task.add_done_callback(
                 functools.partial(save_data, file_obj,
-                                  begin_point, point,
+                                  point, point_t,
                                   shower, part))
 
-            begin_point = min(point + 1, end_point)
+            if point == point_t:
+                break
+
+            point = min(point_t + 1, end_point)
             part += 1
 
     while ctrl_queue.qsize():
