@@ -1,5 +1,7 @@
 # Aget - Asynchronous Downloader
 
+[中文](https://github.com/PeterDing/aget/blob/master/README_zh.md)
+
 Aget is an asynchronous downloader operated in command-line, running on Python > 3.5.
 
 It supports HTTP(S), using [mugen](https://github.com/PeterDing/mugen) request library.
