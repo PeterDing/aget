@@ -4,6 +4,7 @@ import asyncio
 import mugen
 
 from .common import OK_STATUSES
+from .exceptions import ContentLengthError
 
 
 async def async_request(method, url, **kwargs):
@@ -27,13 +28,24 @@ async def request_range(method, url, start, end, ctrl_queue, **kwargs):
 
 
 async def get_content_length(method, url, **kwargs):
-    if kwargs.get('headers'):
-        headers = {'Range': 'bytes=0-1'}
-        headers.update(kwargs.get('headers') or {})
-    else:
-        headers = {'Range': 'bytes=0-1'}
+    # get size from HEAD
+    if method.lower() == 'get':
+        _method = 'HEAD'
 
+        headers = kwargs.get('headers')
+        kwargs['headers'] = headers
+        resp = await async_request(_method, url, **kwargs)
+        if resp.headers.get('Content-Length'):
+            size = int(resp.headers.get('Content-Length'))
+            return size
+
+    # get size from range
+    headers = kwargs['headers'] or {}
+    headers['Range'] = {'bytes=0-1'}
     kwargs['headers'] = headers
-
     resp = await async_request(method, url, **kwargs)
-    return int(resp.headers['Content-Range'].split('/')[-1])
+    if resp.headers.get('Content-Range'):
+        size = int(resp.headers['Content-Range'].split('/')[-1])
+        return size
+
+    raise ContentLengthError('Server does not support partially downloaded')
