@@ -247,38 +247,49 @@ class Shower(object):
                                       self.content_length)
         print(header)
 
-        begin_time = time.time()
+        self._begin_time = time.time()
         while True:
             if self.stop:
                 break
 
-            end_time = time.time()
+            status_line = self._gen_status_line()
 
-            completed_size = self.completed_size
-            download_size = completed_size - self._pre_size
-            self._pre_size = completed_size
-
-            speed = download_size // (end_time - begin_time)
-            speed_str = '{: >7}/s'.format(sizeof_fmt(speed))
-
-            width = terminal_width()
-            cs = sizeof_fmt(completed_size)
-            pre_width = len('{}/{} {} [] '.format(cs, total_size, speed_str))
-            status = '{}/{} {}'.format(
-                color_str(cs, codes=(1, 91)),
-                color_str(total_size, codes=(1, 92)),
-                color_str(speed_str, codes=(1,94)))
-            process_line_width = width - pre_width
-            p = completed_size / self.content_length
-            process_line = '>' * int(p * process_line_width) \
-                            + ' ' * (process_line_width - int(p * process_line_width))
-
-            status_line = '\r{} [{}] '.format(status, process_line)
             sys.stdout.write(status_line)
             sys.stdout.flush()
 
-            begin_time = end_time
             await asyncio.sleep(2)
+
+
+    def _gen_status_line(self):
+        end_time = time.time()
+
+        total_size = sizeof_fmt(self.content_length)
+        completed_size = self.completed_size
+        download_size = completed_size - self._pre_size
+        self._pre_size = completed_size
+
+        speed = download_size / (end_time - self._begin_time)
+        speed_str = '{: >7}/s'.format(sizeof_fmt(int(speed)))
+
+        percent = '{:.2f}'.format(completed_size / self.content_length * 100)
+
+        width = terminal_width()
+        cs = sizeof_fmt(completed_size)
+        pre_width = len('{}/{} {}% {} [] '.format(cs, total_size, percent, speed_str))
+        status = '{}/{} {}% {}'.format(
+            color_str(cs, codes=(1, 91)),
+            color_str(total_size, codes=(1, 92)),
+            color_str(percent, codes=(1, 33)),
+            color_str(speed_str, codes=(1, 94)))
+        process_line_width = width - pre_width
+        p = completed_size / self.content_length
+        process_line = '>' * int(p * process_line_width) \
+                        + ' ' * (process_line_width - int(p * process_line_width))
+
+        status_line = '\r{} [{}] '.format(status, process_line)
+
+        self._begin_time = end_time
+        return status_line
 
 
     def append_info(self, part, begin_point, end_point):
