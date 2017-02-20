@@ -4,7 +4,7 @@ import os
 import functools
 import asyncio
 
-from .request import async_request, get_content_length, request_range
+from .request import get_content_length, request_range
 from .models import File, Shower
 from .utils import make_headers, exit_session
 from .color import color_str

@@ -3,3 +3,6 @@
 
 class ContentLengthError(Exception):
     pass
+
+class HttpNotOk(Exception):
+    pass
