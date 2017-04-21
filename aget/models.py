@@ -7,7 +7,13 @@ import time
 
 from .color import color_str
 
-from .utils import data_pack, data_unpack, sizeof_fmt, terminal_width
+from .utils import (
+    data_pack,
+    data_unpack,
+    sizeof_fmt,
+    timeof_fmt,
+    terminal_width
+)
 
 
 class File(object):
@@ -265,22 +271,37 @@ class Shower(object):
 
         total_size = sizeof_fmt(self.content_length)
         completed_size = self.completed_size
+        uncompleted_size = self.content_length - completed_size
         download_size = completed_size - self._pre_size
         self._pre_size = completed_size
 
         speed = download_size / (end_time - self._begin_time)
         speed_str = '{: >7}/s'.format(sizeof_fmt(int(speed)))
 
+        if speed:
+            eta = timeof_fmt(uncompleted_size / speed)
+            eta_str = 'eta: {: >3}'.format(eta)
+        else:
+            eta_str = 'eta: N/A'
+
         percent = '{:.2f}'.format(completed_size / self.content_length * 100)
 
         width = terminal_width()
         cs = sizeof_fmt(completed_size)
-        pre_width = len('{}/{} {}% {} [] '.format(cs, total_size, percent, speed_str))
-        status = '{}/{} {}% {}'.format(
+        pre_width = len('{}/{} {}% {} {} [] '.format(
+            cs,
+            total_size,
+            percent,
+            speed_str,
+            eta_str
+        ))
+        status = '{}/{} {}% {} {}'.format(
             color_str(cs, codes=(1, 91)),
             color_str(total_size, codes=(1, 92)),
             color_str(percent, codes=(1, 33)),
-            color_str(speed_str, codes=(1, 94)))
+            color_str(speed_str, codes=(1, 94)),
+            color_str(eta_str, codes=(1, 97)),
+        )
         process_line_width = width - pre_width
         p = completed_size / self.content_length
         process_line = '>' * int(p * process_line_width) \

@@ -47,6 +47,19 @@ def sizeof_fmt(num):
     return "%3.1f%s" % (num, 'T')
 
 
+def timeof_fmt(num):   # as second
+    if num < 60:
+        return '{:.0f}s'.format(num)
+    num /= 60
+    if num < 60:
+        return '{:.0f}m'.format(num)
+    num /= 60
+    if num < 24:
+        return '{:.0f}h'.format(num)
+    num /= 24
+    return '{:.0f}d'.format(num)
+
+
 def get_chuck_size(chuck_size_str):
     size = chuck_size_str.upper()
     if size.isdigit():
