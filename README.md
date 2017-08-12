@@ -44,3 +44,9 @@ aget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.9.tar.xz -k 1M
 -k CHUCK_SIZE, --chuck_size CHUCK_SIZE      # request range size
 ```
 
+### For Developer
+
+#### logging
+
+Use environment variable `AGET_LOG_LEVEL` to setting logging level.  
+The default level is `CRITICAL`.

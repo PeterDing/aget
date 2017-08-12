@@ -1,6 +1,8 @@
 # Aget 异步下载工具
 
-Aget 将下载请求分成多个小块，依次用异步下载。
+Aget 将下载请求分成多个小块，依次用异步下载。  
+
+使用异步请求库 [mugen](https://github.com/PeterDing/mugen)
 
 ### 安装
 
@@ -40,3 +42,9 @@ aget https://cdn.v2ex.co/site/logo@2x.png -k 10k
 -k CHUCK_SIZE, --chuck_size CHUCK_SIZE      # 请求块大小
 ```
 
+### 开发者相关
+
+#### logging
+
+用环境变量 `AGET_LOG_LEVEL` 设置 logging 的 level。  
+默认的 level 是 `CRITICAL`。
