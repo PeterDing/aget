@@ -233,7 +233,8 @@ class Shower(object):
     def completed_size(self):
         while self._completed_chucks:
             part, begin_point, end_point = self._completed_chucks.pop()
-            self._completed_size += (end_point - begin_point + 1)
+            if end_point != begin_point:
+                self._completed_size += (end_point - begin_point + 1)
         return self._completed_size
 
 
@@ -254,16 +255,18 @@ class Shower(object):
         print(header)
 
         self._begin_time = time.time()
+
         while True:
+            self._show_process_line()
             if self.stop:
                 break
-
-            status_line = self._gen_status_line()
-
-            sys.stdout.write(status_line)
-            sys.stdout.flush()
-
             await asyncio.sleep(2)
+
+
+    def _show_process_line(self):
+        status_line = self._gen_status_line()
+        sys.stdout.write(status_line)
+        sys.stdout.flush()
 
 
     def _gen_status_line(self):
@@ -272,6 +275,7 @@ class Shower(object):
         total_size = sizeof_fmt(self.content_length)
         completed_size = self.completed_size
         uncompleted_size = self.content_length - completed_size
+        print('uncompleted_size', uncompleted_size, self.content_length, completed_size)
         download_size = completed_size - self._pre_size
         self._pre_size = completed_size
 
@@ -304,8 +308,17 @@ class Shower(object):
         )
         process_line_width = width - pre_width
         p = completed_size / self.content_length
-        process_line = '>' * int(p * process_line_width) \
-                        + ' ' * (process_line_width - int(p * process_line_width))
+
+        completed_process_line_width   = int(p * process_line_width)
+        uncompleted_process_line_width = process_line_width \
+                                         - completed_process_line_width
+
+        if completed_process_line_width == process_line_width:
+            process_line = '=' * completed_process_line_width
+        else:
+            process_line = '=' * (completed_process_line_width - 1) \
+                            + ('', '>')[completed_process_line_width > 0] \
+                            + ' ' * uncompleted_process_line_width
 
         status_line = '\r{} [{}] '.format(status, process_line)
 
