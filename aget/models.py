@@ -259,6 +259,7 @@ class Shower(object):
         while True:
             self._show_process_line()
             if self.stop:
+                self._show_process_line()
                 break
             await asyncio.sleep(2)
 
@@ -275,7 +276,6 @@ class Shower(object):
         total_size = sizeof_fmt(self.content_length)
         completed_size = self.completed_size
         uncompleted_size = self.content_length - completed_size
-        print('uncompleted_size', uncompleted_size, self.content_length, completed_size)
         download_size = completed_size - self._pre_size
         self._pre_size = completed_size
 
