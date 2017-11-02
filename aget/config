@@ -1,6 +1,6 @@
 [basic]
 concurrency = 10
-chuck_size = 1M
+chuck_size = 100K
 quiet = false
 
 [http]
