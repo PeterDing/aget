@@ -19,7 +19,7 @@ async def async_request(method, url, ok=False, **kwargs):
             else:
                 return resp
         except Exception:
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.1)
 
 
 async def request_range(method, url, start, end, ctrl_queue, **kwargs):
