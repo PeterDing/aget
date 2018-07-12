@@ -57,8 +57,10 @@ async def download(args):
     ctrl_queue = asyncio.queues.Queue(maxsize=concurrency)
 
     part = 1
-    # print(list(file_obj.undownload_chucks))
     for begin_point, end_point in file_obj.undownload_chucks:
+        # chunk point
+        # point is the begin of the chunk
+        # point_t is the end of the chunk
         point = begin_point
         point_t = 0
         while point <= end_point:
