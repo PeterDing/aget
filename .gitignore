@@ -9,6 +9,7 @@ __pycache__/
 *.egg-info/
 .installed.cfg
 *.egg
+build/
 
 # Working Directory
 working/
