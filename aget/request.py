@@ -33,17 +33,6 @@ async def request_range(method, url, start, end, ctrl_queue, **kwargs):
 
 
 async def get_content_length(method, url, **kwargs):
-    # get size from HEAD
-    if method.lower() == 'get':
-        _method = 'HEAD'
-
-        headers = kwargs.get('headers')
-        kwargs['headers'] = headers
-        resp = await async_request(_method, url, ok=False, **kwargs)
-        if resp.headers.get('Content-Length'):
-            size = int(resp.headers.get('Content-Length'))
-            return size
-
     # get size from range
     headers = dict(kwargs['headers'] or {})
     headers['Range'] = 'bytes=0-1'
