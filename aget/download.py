@@ -11,13 +11,13 @@ from .color import color_str
 
 
 async def download(args):
-# async def download(method, url,
-                   # headers=None,
-                   # data=None,
-                   # timeout=None,
-                   # config=None,
-                   # chuck_size=DEFAULT_CHUCK_SIZE,
-                   # concurrency=DEFAULT_CONCURRENCY):
+    # async def download(method, url,
+    # headers=None,
+    # data=None,
+    # timeout=None,
+    # config=None,
+    # chuck_size=DEFAULT_CHUCK_SIZE,
+    # concurrency=DEFAULT_CONCURRENCY):
 
     file_obj = File(args.out)
 
@@ -29,28 +29,19 @@ async def download(args):
     chuck_size = args.chuck_size
     concurrency = args.concurrency
 
-    content_length = await get_content_length(method, url,
-                                              headers=headers,
-                                              data=data,
-                                              timeout=timeout)
+    content_length = await get_content_length(method, url, headers=headers, data=data, timeout=timeout)
 
     if file_obj.is_init():
         file_obj.record_data(content_length)
     else:
         if file_obj.info.content_length != content_length:
-            print(color_str('Conflict content length:', codes=(1, 91)),
-                  file_obj.info.content_length,
-                  content_length)
+            print(color_str("Conflict content length:", codes=(1, 91)), file_obj.info.content_length, content_length)
             return None
 
     file_obj.info.content_length = content_length
     file_obj.create_file()
 
-    shower = Shower(args.out,
-                    content_length,
-                    file_obj.info.completed_size,
-                    concurrency,
-                    chuck_size)
+    shower = Shower(args.out, content_length, file_obj.info.completed_size, concurrency, chuck_size)
 
     show_task = asyncio.ensure_future(shower.show())
 
@@ -68,18 +59,10 @@ async def download(args):
             point_t = min(point + chuck_size, end_point)
 
             task = asyncio.ensure_future(
-                request_range(method, url,
-                              point,
-                              point_t,
-                              ctrl_queue,
-                              headers=headers,
-                              data=data,
-                              timeout=timeout))
+                request_range(method, url, point, point_t, ctrl_queue, headers=headers, data=data, timeout=timeout)
+            )
 
-            task.add_done_callback(
-                functools.partial(save_data, file_obj,
-                                  point, point_t,
-                                  shower, part))
+            task.add_done_callback(functools.partial(save_data, file_obj, point, point_t, shower, part))
 
             if point == point_t:
                 break

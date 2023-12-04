@@ -23,9 +23,9 @@ async def async_request(method, url, ok=False, **kwargs):
 
 
 async def request_range(method, url, start, end, ctrl_queue, **kwargs):
-    headers = dict(kwargs.get('headers', {}))
-    headers['Range'] = 'bytes={}-{}'.format(start, end)
-    kwargs['headers'] = headers
+    headers = dict(kwargs.get("headers", {}))
+    headers["Range"] = "bytes={}-{}".format(start, end)
+    kwargs["headers"] = headers
 
     resp = await async_request(method, url, ok=True, **kwargs)
     await ctrl_queue.get()
@@ -34,12 +34,12 @@ async def request_range(method, url, start, end, ctrl_queue, **kwargs):
 
 async def get_content_length(method, url, **kwargs):
     # get size from range
-    headers = dict(kwargs['headers'] or {})
-    headers['Range'] = 'bytes=0-1'
-    kwargs['headers'] = headers
+    headers = dict(kwargs["headers"] or {})
+    headers["Range"] = "bytes=0-1"
+    kwargs["headers"] = headers
     resp = await async_request(method, url, ok=True, **kwargs)
-    if resp.headers.get('Content-Range'):
-        size = int(resp.headers['Content-Range'].split('/')[-1])
+    if resp.headers.get("Content-Range"):
+        size = int(resp.headers["Content-Range"].split("/")[-1])
         return size
 
-    raise ContentLengthError('Server does not support partially downloaded')
+    raise ContentLengthError("Server does not support partially downloaded")

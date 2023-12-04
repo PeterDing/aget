@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-COLOR_TEMPLATE = '\x1b[{}m{}\x1b[0m'
+COLOR_TEMPLATE = "\x1b[{}m{}\x1b[0m"
 
 #
 # http://misc.flogisoft.com/bash/tip_colors_and_formatting
@@ -60,8 +60,6 @@ def color_str(msg, codes=None):
         return msg
 
     if codes:
-        return COLOR_TEMPLATE.format(';'.join([str(e) for e in codes]), msg)
+        return COLOR_TEMPLATE.format(";".join([str(e) for e in codes]), msg)
     else:
         return msg
-
-

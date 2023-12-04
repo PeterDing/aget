@@ -7,22 +7,16 @@ import struct
 import mugen
 
 from .color import color_str
-from .common import (
-    OneK,
-    OneM,
-    OneG,
-    OneT,
-    DEFAULT_CHUCK_SIZE
-)
+from .common import OneK, OneM, OneG, OneT, DEFAULT_CHUCK_SIZE
 
 
-STRUCT_FORMAT = 'Q'   # unsigned long long
+STRUCT_FORMAT = "Q"  # unsigned long long
 
 
 def make_headers(args):
     headers = {}
     for header in args.header:
-        k, v = header.split(': ', 1)
+        k, v = header.split(": ", 1)
         headers[k] = v
     return headers
 
@@ -40,34 +34,34 @@ def exit_session():
 
 
 def sizeof_fmt(num):
-    for x in ['B','K','M','G']:
+    for x in ["B", "K", "M", "G"]:
         if num < 1024.0:
             return "%3.1f%s" % (num, x)
         num /= 1024.0
-    return "%3.1f%s" % (num, 'T')
+    return "%3.1f%s" % (num, "T")
 
 
-def timeof_fmt(num):   # as second
+def timeof_fmt(num):  # as second
     if num < 60:
-        return '{:.0f}s'.format(num)
+        return "{:.0f}s".format(num)
     num /= 60
     if num < 60:
-        return '{:.0f}m'.format(num)
+        return "{:.0f}m".format(num)
     num /= 60
     if num < 24:
-        return '{:.0f}h'.format(num)
+        return "{:.0f}h".format(num)
     num /= 24
-    return '{:.0f}d'.format(num)
+    return "{:.0f}d".format(num)
 
 
 def get_chuck_size(chuck_size_str):
     size = chuck_size_str.upper()
     if size.isdigit():
         return int(size)
-    elif size.endswith('K'):
+    elif size.endswith("K"):
         s = int(size[:-1]) * OneK
         return s
-    elif size.endswith('M'):
+    elif size.endswith("M"):
         s = int(size[:-1]) * OneM
         return s
     else:
@@ -75,12 +69,12 @@ def get_chuck_size(chuck_size_str):
 
 
 def terminal_width():
-    return int(os.popen('tput cols').read())
+    return int(os.popen("tput cols").read())
 
 
 def assert_completed_file(args):
     path = args.out
-    info_path = args.out + '.aget'
+    info_path = args.out + ".aget"
     if os.path.exists(path) and not os.path.exists(info_path):
-        print(color_str(path, codes=(1, 91)), 'is existed')
+        print(color_str(path, codes=(1, 91)), "is existed")
         sys.exit()

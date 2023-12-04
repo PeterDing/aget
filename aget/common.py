@@ -1,5 +1,3 @@
-
-
 from http import HTTPStatus
 
 OK_STATUSES = (
