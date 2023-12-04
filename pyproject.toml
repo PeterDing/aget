@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "aget"
 homepage = "https://github.com/PeterDing/aget"
-version = "0.1.17"
+version = "0.2.0"
 description = "Aget - An Asynchronous Downloader"
 authors = ["PeterDing <dfhayst@gmail.com>"]
 license = "MIT"
