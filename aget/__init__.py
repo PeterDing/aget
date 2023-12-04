@@ -7,8 +7,6 @@ import asyncio
 import argparse
 import logging
 
-import mugen
-
 from .download import download
 from .color import color_str
 from .configure import configure
@@ -17,7 +15,6 @@ from .utils import assert_completed_file
 
 def sigal_handler(signum, frame):
     print(color_str("  !! Signal:", codes=(1, 91)), signum)
-    mugen.session().close()
 
     sys.exit(1)
 

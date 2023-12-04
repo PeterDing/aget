@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-import mugen
+import httpx
 
 from .common import OK_STATUSES
 from .exceptions import ContentLengthError, HttpNotOk
@@ -10,14 +10,15 @@ from .exceptions import ContentLengthError, HttpNotOk
 async def async_request(method, url, ok=False, **kwargs):
     while True:
         try:
-            resp = await mugen.request(method, url, **kwargs)
-            if ok:
-                if resp.status_code in OK_STATUSES:
-                    return resp
+            async with httpx.AsyncClient() as client:
+                resp = await client.request(method, url, **kwargs)
+                if ok:
+                    if resp.status_code in OK_STATUSES:
+                        return resp
+                    else:
+                        raise HttpNotOk(resp.status_code)
                 else:
-                    raise HttpNotOk(resp.status_code)
-            else:
-                return resp
+                    return resp
         except Exception:
             await asyncio.sleep(0.1)
 

@@ -1,24 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os
 import functools
 import asyncio
 
 from .request import get_content_length, request_range
 from .models import File, Shower
-from .utils import make_headers, exit_session
+from .utils import make_headers
 from .color import color_str
 
 
 async def download(args):
-    # async def download(method, url,
-    # headers=None,
-    # data=None,
-    # timeout=None,
-    # config=None,
-    # chuck_size=DEFAULT_CHUCK_SIZE,
-    # concurrency=DEFAULT_CONCURRENCY):
-
     file_obj = File(args.out)
 
     method = args.method
@@ -76,7 +67,6 @@ async def download(args):
     await asyncio.sleep(1)
     file_obj.close()
     file_obj.info.remove_aget()
-    exit_session()
     shower.over()
     show_task.cancel()
 

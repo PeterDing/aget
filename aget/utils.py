@@ -4,8 +4,6 @@ import sys
 import os
 import struct
 
-import mugen
-
 from .color import color_str
 from .common import OneK, OneM, OneG, OneT, DEFAULT_CHUCK_SIZE
 
@@ -27,10 +25,6 @@ def data_pack(num):
 
 def data_unpack(chuck):
     return struct.unpack(STRUCT_FORMAT, chuck)[0]
-
-
-def exit_session():
-    mugen.session().close()
 
 
 def sizeof_fmt(num):
