@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "aget"
+homepage = "https://github.com/PeterDing/aget"
+version = "0.1.17"
+description = "Aget - An Asynchronous Downloader"
+authors = ["PeterDing <dfhayst@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+
+[tool.black]
+line-length = 119
+
+[tool.ruff]
+ignore = ["E501", "F401", "F841"]
+line-length = 119
+
+[tool.poetry.dependencies]
+python = "^3.8"
+httpx = ">=0.25"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+mypy = "^0.991"
+black = "^22.10.0"
+
+[tool.poetry.scripts]
+aget = "aget:main"
+
+[tool.pyright]
+reportGeneralTypeIssues = true
+
+[build-system]
+requires = ["setuptools"]
