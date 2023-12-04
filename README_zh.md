@@ -2,7 +2,7 @@
 
 Aget 将下载请求分成多个小块，依次用异步下载。  
 
-使用异步请求库 [mugen](https://github.com/PeterDing/mugen)
+使用异步请求库 [httpx](https://github.com/encode/httpx)
 
 ### 安装
 

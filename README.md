@@ -4,7 +4,7 @@
 
 Aget is an asynchronous downloader operated in command-line, running on Python > 3.5.
 
-It supports HTTP(S), using [mugen](https://github.com/PeterDing/mugen) request library.
+It supports HTTP(S), using [httpx](https://github.com/encode/httpx) request library.
 
 Aget continues downloading a partially downloaded file as default.
 
