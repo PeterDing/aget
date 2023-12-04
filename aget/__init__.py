@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import signal
 import asyncio
 import argparse
+import logging
 
 import mugen
 
@@ -53,6 +55,16 @@ def parse_arguments(argv):
 
 
 def main():
+    # Set logging
+    AGET_LOG_LEVEL = logging.CRITICAL
+    log_level = os.getenv('AGET_LOG_LEVEL', '').upper()
+    if hasattr(logging, log_level):
+        AGET_LOG_LEVEL = getattr(logging, log_level)
+
+    _format = '%(asctime)s %(levelname)s [%(name)s:%(lineno)s]: %(message)s'
+    logging.basicConfig(format=_format, level=AGET_LOG_LEVEL)
+
+    # Handle signals
     handle_signal()
 
     argv = sys.argv[1:]
